@@ -82,17 +82,21 @@ class BarrelDetector():
 			Our solution uses xy-coordinate instead of rc-coordinate. More information: http://scikit-image.org/docs/dev/user_guide/numpy_images.html#coordinate-conventions
 		'''
 		# YOUR CODE HERE
-		img = self.segment_image(img)
-		img.dtype = 'uint8'
+		img = np.array(self.segment_image(img),np.uint8)*255
+		# print(img.shape)
 		ret,thresh = cv2.threshold(img,127,255,0)
 		contours,hierarchy = cv2.findContours(thresh, 1, 2)
 		boxes = []
+		#print(np.shape(contours)[0])
 		for i in range(np.shape(contours)[0]):
 			if (contours[i].size>50):
 				x,y,w,h = cv2.boundingRect(contours[i])
 				if h > w and h < 2.5*w:
+					print('yes')
 					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
 					boxes.append([x,y,x+w,y+h])
+		#cv2.imwrite('bounding_box_results/'+ str(1) + '.png', img)
+		print(boxes)
 		return boxes
 
 
