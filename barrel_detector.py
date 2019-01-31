@@ -88,9 +88,9 @@ class BarrelDetector():
 		contours,hierarchy = cv2.findContours(thresh, 1, 2)
 		boxes = []
 		for i in range(np.shape(contours)[0]):
-			if (contours[i].size>20):
+			if (contours[i].size>50):
 				x,y,w,h = cv2.boundingRect(contours[i])
-				if h > w and h < 3*w:
+				if h > w and h < 2.5*w:
 					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
 					boxes.append([x,y,x+w,y+h])
 		return boxes
