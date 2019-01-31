@@ -47,8 +47,8 @@ class BarrelDetector():
 		scores[:,:,5] = yellow_score
 		scores_m = np.argmin(scores,axis=2)
 		mask_img[np.where(scores_m==0)] = 1
-		kernel = np.ones((5,5))
-		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
+		#kernel = np.ones((5,5))
+		#mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
 
 
 		current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
