@@ -47,8 +47,8 @@ class BarrelDetector():
 		scores[:,:,5] = yellow_score
 		scores_m = np.argmin(scores,axis=2)
 		mask_img[np.where(scores_m==0)] = 1
-		#kernel = np.ones((5,5))
-		#mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
+		kernel = np.ones((5,5))
+		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
 
 
 		current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
@@ -64,7 +64,7 @@ class BarrelDetector():
 		
 		kernel = np.ones((3,3))
 		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
-		mask_img = cv2.dilate(mask_img,kernel,iterations = 1)
+		mask_img = cv2.dilate(mask_img,kernel,iterations = 3)
 		return mask_img
 
 	def get_bounding_box(self, img):
@@ -91,7 +91,7 @@ class BarrelDetector():
 		for i in range(np.shape(contours)[0]):
 			if (contours[i].size>20):
 				x,y,w,h = cv2.boundingRect(contours[i])
-				if h > 0.9*w and h < 2.5*w:
+				if h > 0.7*w and h < 3*w:
 					print('yes')
 					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
 					boxes.append([x,y,x+w,y+h])
