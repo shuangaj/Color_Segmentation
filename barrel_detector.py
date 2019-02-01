@@ -87,7 +87,7 @@ class BarrelDetector():
 			secondscores_m[np.where(mask_img==0)] = 1
 			mask_img[np.where(secondscores_m!=0)] = 0
 			
-		kernel = np.ones((5,5))
+		kernel = np.ones((3,2))
 		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
 		#mask_img = cv2.dilate(mask_img,kernel,iterations = 1)
 		return mask_img
