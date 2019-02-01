@@ -112,9 +112,10 @@ class BarrelDetector():
 		ret,thresh = cv2.threshold(img,127,255,0)
 		contours,hierarchy = cv2.findContours(thresh, 1, 2)
 		boxes = []
+
 		#print(np.shape(contours)[0])
 		for i in range(np.shape(contours)[0]):
-			if (contours[i].size>50):
+			if (cv2.contourArea(contours[i])>50):
 				x,y,w,h = cv2.boundingRect(contours[i])
 				if h > w and h < 2.5*w:
 					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
