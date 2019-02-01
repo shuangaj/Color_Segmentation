@@ -80,7 +80,7 @@ class BarrelDetector():
 		#secondscores[:,:,2] = target_blue_score+10
 		#secondscores[:,:,3] = target_blue_score+10
 		#secondscores[:,:,4] = target_blue_score+10
-		if average_illuminance < 100 and average_illuminance > 50:
+		if average_illuminance < 110 and average_illuminance > 60:
 			print(1)
 		else:
 			secondscores_m = np.argmin(secondscores,axis=2)
@@ -115,9 +115,9 @@ class BarrelDetector():
 
 		#print(np.shape(contours)[0])
 		for i in range(np.shape(contours)[0]):
-			if (cv2.contourArea(contours[i])>100):
+			if (cv2.contourArea(contours[i])>150):
 				x,y,w,h = cv2.boundingRect(contours[i])
-				if h > w and h < 2.5*w:
+				if h > 0.8*w and h < 2.5*w:
 					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
 					boxes.append([x,y,x+w,y+h])
 		#cv2.imwrite('bounding_box_results/'+ str(1) + '.png', img)
