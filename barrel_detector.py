@@ -36,9 +36,9 @@ class BarrelDetector():
 
 	def segment_image(self, img):
 		#current_image = np.zeros((800,1200,3))
-		#current_image[:,:,0:3] = np.asarray(img)
-		current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))[:,:,0:2]
-		current_image = np.reshape(current_image,(960000,2))
+		current_image = np.asarray(img)
+		#current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))[:,:,0:2]
+		current_image = np.reshape(current_image,(960000,3))
 		mask_img = np.zeros((800,1200))
 		scores = np.zeros((800,1200,6))
 		barrel_blue_score = np.log(abs(np.linalg.det(self.barrel_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.barrel_blue_mean.transpose(),np.linalg.inv(self.barrel_blue_cov))),current_image.transpose()-self.barrel_blue_mean),axis=0),(800,1200))
