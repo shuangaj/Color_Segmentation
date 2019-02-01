@@ -80,7 +80,7 @@ class BarrelDetector():
 		#secondscores[:,:,3] = target_blue_score+10
 		#secondscores[:,:,4] = target_blue_score+10
 		if average_illuminance < 150:
-			#print(1)
+			print(1)
 		else:
 			secondscores_m = np.argmin(secondscores,axis=2)
 			secondscores_m[np.where(mask_img==0)] = 1
