@@ -37,8 +37,8 @@ class BarrelDetector():
 	def segment_image(self, img):
 		#current_image = np.zeros((800,1200,3))
 		#current_image[:,:,0:3] = np.asarray(img)
-		#current_image[:,:,3] = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb))[:,:,0]
-		current_image = np.reshape(img,(960000,3))
+		current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))[:,:,0:2]
+		current_image = np.reshape(img,(960000,2))
 		mask_img = np.zeros((800,1200))
 		scores = np.zeros((800,1200,6))
 		barrel_blue_score = np.log(abs(np.linalg.det(self.barrel_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.barrel_blue_mean.transpose(),np.linalg.inv(self.barrel_blue_cov))),current_image.transpose()-self.barrel_blue_mean),axis=0),(800,1200))
@@ -55,34 +55,31 @@ class BarrelDetector():
 		scores[:,:,5] = yellow_score
 		scores_m = np.argmin(scores,axis=2)
 		mask_img[np.where(scores_m==0)] = 1
-		#kernel = np.ones((5,5))
-		#mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
+		kernel = np.ones((5,5))
+		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
 
 
-# 		current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
-# 		current_image = np.reshape(current_image,(960000,3))
-# 		target_blue_score = np.log(abs(np.linalg.det(self.target_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.target_blue_mean.transpose(),np.linalg.inv(self.target_blue_cov))),current_image.transpose()-self.target_blue_mean),axis=0),(800,1200))
-# 		kettle_blue_score = np.log(abs(np.linalg.det(self.kettle_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.kettle_blue_mean.transpose(),np.linalg.inv(self.kettle_blue_cov))),current_image.transpose()-self.kettle_blue_mean),axis=0),(800,1200))
-# 		stick_blue_score = np.log(abs(np.linalg.det(self.stick_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.stick_blue_mean.transpose(),np.linalg.inv(self.stick_blue_cov))),current_image.transpose()-self.stick_blue_mean),axis=0),(800,1200))
-# 		wall_blue_score = np.log(abs(np.linalg.det(self.wall_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.wall_blue_mean.transpose(),np.linalg.inv(self.wall_blue_cov))),current_image.transpose()-self.wall_blue_mean),axis=0),(800,1200))
-# 		carpet_blue_score = np.log(abs(np.linalg.det(self.carpet_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.carpet_blue_mean.transpose(),np.linalg.inv(self.carpet_blue_cov))),current_image.transpose()-self.carpet_blue_mean),axis=0),(800,1200))
-# 		secondscores = np.zeros((800,1200,5))
-# 		secondscores[:,:,0] = target_blue_score
-# 		secondscores[:,:,1] = kettle_blue_score
-# 		#secondscores[:,:,1] = target_blue_score+10
-# 		secondscores[:,:,2] = stick_blue_score
-# 		secondscores[:,:,3] = wall_blue_score
-# 		secondscores[:,:,4] = carpet_blue_score
-# 		secondscores[:,:,2] = target_blue_score+10
-# 		secondscores[:,:,3] = target_blue_score+10
-# 		secondscores[:,:,4] = target_blue_score+10
-# 		secondscores_m = np.argmin(secondscores,axis=2)
-# 		secondscores_m[np.where(mask_img==0)] = 1
-# 		mask_img[np.where(secondscores_m!=0)] = 0
+		# current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
+		# current_image = np.reshape(current_image,(960000,3))
+		# target_blue_score = np.log(abs(np.linalg.det(self.target_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.target_blue_mean.transpose(),np.linalg.inv(self.target_blue_cov))),current_image.transpose()-self.target_blue_mean),axis=0),(800,1200))
+		# kettle_blue_score = np.log(abs(np.linalg.det(self.kettle_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.kettle_blue_mean.transpose(),np.linalg.inv(self.kettle_blue_cov))),current_image.transpose()-self.kettle_blue_mean),axis=0),(800,1200))
+		# stick_blue_score = np.log(abs(np.linalg.det(self.stick_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.stick_blue_mean.transpose(),np.linalg.inv(self.stick_blue_cov))),current_image.transpose()-self.stick_blue_mean),axis=0),(800,1200))
+		# wall_blue_score = np.log(abs(np.linalg.det(self.wall_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.wall_blue_mean.transpose(),np.linalg.inv(self.wall_blue_cov))),current_image.transpose()-self.wall_blue_mean),axis=0),(800,1200))
+		# carpet_blue_score = np.log(abs(np.linalg.det(self.carpet_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.carpet_blue_mean.transpose(),np.linalg.inv(self.carpet_blue_cov))),current_image.transpose()-self.carpet_blue_mean),axis=0),(800,1200))
+		# secondscores = np.zeros((800,1200,5))
+		# secondscores[:,:,0] = target_blue_score
+		# secondscores[:,:,1] = kettle_blue_score
+		# #secondscores[:,:,1] = target_blue_score+10
+		# secondscores[:,:,2] = stick_blue_score
+		# secondscores[:,:,3] = wall_blue_score
+		# secondscores[:,:,4] = carpet_blue_score
+		# secondscores_m = np.argmin(secondscores,axis=2)
+		# secondscores_m[np.where(mask_img==0)] = 1
+		# mask_img[np.where(secondscores_m!=0)] = 0
 			
-# 		kernel = np.ones((3,3))
-# 		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
-# 		mask_img = cv2.dilate(mask_img,kernel,iterations = 1)
+		# kernel = np.ones((3,3))
+		# mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
+		# mask_img = cv2.dilate(mask_img,kernel,iterations = 1)
 		return mask_img
 
 	def get_bounding_box(self, img):
