@@ -114,19 +114,12 @@ class BarrelDetector():
 		boxes = []
 
 		#print(np.shape(contours)[0])
-		# for i in range(np.shape(contours)[0]):
-		# 	if (cv2.contourArea(contours[i])>200):
-		# 		x,y,w,h = cv2.boundingRect(contours[i])
-		# 		if h < 5*w: #and h > 0.5*w:
-		# 			#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-		# 			boxes.append([x,y,x+w,y+h])
-		# #cv2.imwrite('bounding_box_results/'+ str(1) + '.png', img)
-		# print(boxes)
 		for i in range(np.shape(contours)[0]):
-			x,y,w,h = cv2.boundingRect(contours[i])
-			if h*w > 200 and h < 2.5*w and h > 1.3*w:
-				#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-				boxes.append([x,y,x+w,y+h])
+			if (cv2.contourArea(contours[i])>200):
+				x,y,w,h = cv2.boundingRect(contours[i])
+				if h < 2.5*w and h > 1.3*w:
+					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
+					boxes.append([x,y,x+w,y+h])
 		#cv2.imwrite('bounding_box_results/'+ str(1) + '.png', img)
 		print(boxes)
 		return boxes
