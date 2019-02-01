@@ -89,7 +89,7 @@ class BarrelDetector():
 			
 		kernel = np.ones((5,5))
 		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
-		mask_img = cv2.dilate(mask_img,kernel,iterations = 1)
+		#mask_img = cv2.dilate(mask_img,kernel,iterations = 1)
 		return mask_img
 
 	def get_bounding_box(self, img):
