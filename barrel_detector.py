@@ -62,6 +62,7 @@ class BarrelDetector():
 		current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
 		v_channel = current_image[:,:,2]
 		average_illuminance = np.mean(np.mean(v_channel[np.where(mask_img==1)]))
+		print(average_illuminance)
 		current_image = current_image[:,:,0:2] #drop the v info
 		current_image = np.reshape(current_image,(960000,2))
 		target_blue_score = np.log(abs(np.linalg.det(self.target_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.target_blue_mean.transpose(),np.linalg.inv(self.target_blue_cov))),current_image.transpose()-self.target_blue_mean),axis=0),(800,1200))
@@ -79,7 +80,7 @@ class BarrelDetector():
 		#secondscores[:,:,2] = target_blue_score+10
 		#secondscores[:,:,3] = target_blue_score+10
 		#secondscores[:,:,4] = target_blue_score+10
-		if average_illuminance < 140:
+		if average_illuminance < 150:
 			print(1)
 		else:
 			secondscores_m = np.argmin(secondscores,axis=2)
@@ -113,7 +114,7 @@ class BarrelDetector():
 		boxes = []
 		#print(np.shape(contours)[0])
 		for i in range(np.shape(contours)[0]):
-			if (contours[i].size>20):
+			if (contours[i].size>30):
 				x,y,w,h = cv2.boundingRect(contours[i])
 				if h > w and h < 2.5*w:
 					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
