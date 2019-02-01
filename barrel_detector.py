@@ -55,16 +55,16 @@ class BarrelDetector():
 		scores[:,:,5] = yellow_score
 		scores_m = np.argmin(scores,axis=2)
 		mask_img[np.where(scores_m==0)] = 1
-		kernel = np.ones((5,5))
-		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
+		#kernel = np.ones((5,5))
+		#mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
 
 
 		current_image = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
 		v_channel = current_image[:,:,2]
 		average_illuminance = np.mean(np.mean(v_channel[np.where(mask_img==1)]))
 		print(average_illuminance)
-		current_image = current_image[:,:,0:2] #drop the v info
-		current_image = np.reshape(current_image,(960000,2))
+		#current_image = current_image[:,:,0:2] #drop the v info
+		current_image = np.reshape(current_image,(960000,3))
 		target_blue_score = np.log(abs(np.linalg.det(self.target_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.target_blue_mean.transpose(),np.linalg.inv(self.target_blue_cov))),current_image.transpose()-self.target_blue_mean),axis=0),(800,1200))
 		kettle_blue_score = np.log(abs(np.linalg.det(self.kettle_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.kettle_blue_mean.transpose(),np.linalg.inv(self.kettle_blue_cov))),current_image.transpose()-self.kettle_blue_mean),axis=0),(800,1200))
 		stick_blue_score = np.log(abs(np.linalg.det(self.stick_blue_cov))) + np.reshape(np.sum(np.multiply(np.transpose(np.dot(current_image-self.stick_blue_mean.transpose(),np.linalg.inv(self.stick_blue_cov))),current_image.transpose()-self.stick_blue_mean),axis=0),(800,1200))
@@ -80,7 +80,7 @@ class BarrelDetector():
 		#secondscores[:,:,2] = target_blue_score+10
 		#secondscores[:,:,3] = target_blue_score+10
 		#secondscores[:,:,4] = target_blue_score+10
-		if average_illuminance < 100:
+		if average_illuminance < 100 and average_illuminance > 50:
 			print(1)
 		else:
 			secondscores_m = np.argmin(secondscores,axis=2)
@@ -89,7 +89,7 @@ class BarrelDetector():
 			
 		kernel = np.ones((3,3))
 		mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel)
-		mask_img = cv2.dilate(mask_img,kernel,iterations = 2)
+		#mask_img = cv2.dilate(mask_img,kernel,iterations = 2)
 		return mask_img
 
 	def get_bounding_box(self, img):
@@ -115,7 +115,7 @@ class BarrelDetector():
 
 		#print(np.shape(contours)[0])
 		for i in range(np.shape(contours)[0]):
-			if (cv2.contourArea(contours[i])>50):
+			if (cv2.contourArea(contours[i])>100):
 				x,y,w,h = cv2.boundingRect(contours[i])
 				if h > w and h < 2.5*w:
 					#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
